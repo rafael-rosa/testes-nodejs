@@ -1,0 +1,82 @@
+O Heroku é um Platform As A Service, ou PAAS
+
+Uma aplicação real precisa estar disponível em algum servidor real em algum momento. No nosso caso, vamos usar o Heroku, uma boa opção de cloud para deploy de aplicações escritas em javascript.
+Para começar a usar, você precisa ter um login. Caso ainda não tenha, crie em https://www.heroku.com/ É grátis. =D
+
+Depois disso você precisa fazer o download do Heroku Toolbelt, um utilitário de linha de comando que automatiza todo o processo de criação de novas apps, instalação de infra e muito mais. Pode ser baixado aqui https://toolbelt.heroku.com/
+
+Alguns comandos que você pode executar para validar sua instalação:
+
+heroku apps
+heroku login
+heroku apps —help
+
+-Após instalar o toolbelt do heroku no cmd:
+
+heroku apps:create <nome app>
+
+Antes de rodar este comando, voce precisa enviar sua aplicacao para o git 
+-git init
+-git add -A
+-git commit
+-git push (para algum repositorio do git hub)
+
+Ao rodar o comando de criacao do aplicativo do heroku, ele já vai disponibilizar uma url para acesso ao aplicativo e o repositorio git para deploy da sua aplicacao:
+
+c:\Estudos\nodejs\casadocodigo>heroku apps:create cdc-node-v1
+Creating cdc-node-v1... done
+https://cdc-node-v1.herokuapp.com/ | https://git.heroku.com/cdc-node-v1.git
+
+O heroku tambem adiciona este repositorio remoto automaticamente na sua lista de repositorios remotos:
+
+c:\Estudos\nodejs\casadocodigo>git remote
+heroku
+origin
+
+
+
+=================================================================================
+Criacao do banco de dados no Heroku
+
+Para utilizar o MySQL no Heroku é preciso utilizar um sistema chamado Clear DB que é como se fosse um Heroku, só que funciona para Bancos de dados. O interessante é que não é preciso ter experiência no ClearDB pois o Heroku já abstrai tudo para nós.
+
+Nós utilizaremos o plano mais básico que existe para o Heroku que é um banco que só permite um volume de dados pequeno (IGNITE), mas o suficiente para nossas necessidades. Claro que, dependendo da aplicação desenvolvida, pode-se adquirir um pacote melhor no futuro.
+
+Uma das opções disponíveis no Heroku são os addons espécies de pluggins que adicionamos para criar a infraestrutura necessária para rodar. Portanto, utilizaremos a versão do serviço ignite, o mais básico possível, acompanhado do addons. Escreveremos no Terminal:
+
+
+heroku addons:create cleardb:ignite
+
+(ignite é o pacote mínimo de banco de dados)
+
+Para conferir a string de conexao do banco
+
+heroku config
+
+=== cdc-node-v1 Config Vars
+CLEARDB_DATABASE_URL: mysql://<login>:<senha>@<host>/heroku_9c190bbac2e4b09?reconnect=true
+
+Esta string de conexao pode ser pega nas configs do app no site do heroku ou com o comando 
+heroku config
+
+=================================================================================
+
+Conferindo a utilizacao dos recursos do Heroku pela aplicacao (Se passar do limite gratis, vai cobrar)
+
+heroku ps -a <app name>
+
+650 free dyno hours (65%) used
+350 hours remaining
+
+================================================================================
+
+Definindo como iniciar a aplicacao (npm start) e a versao do node que ela deve rodar (se necessario)
+
+-Basta adicionar no arquivo package.json do seu projeto. Não é obrigatório definir a versão, o heroku vai rodar com a ultima disponivel se nao tiver definido
+
+  "scripts": {
+    "start": "node app"
+  },
+  "engines": {
+    "node": "6.11.1"
+  }
